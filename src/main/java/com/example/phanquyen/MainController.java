@@ -61,8 +61,6 @@ public class MainController {
 
 
 
-
-
     //===== GET METHOD == BUILD VIEW CLIENT =======
 
     @GetMapping("login")
@@ -84,6 +82,7 @@ public class MainController {
 
 
 
+
     // ============= POST METHOD - GET REQUEST INPUT FORM ==============
     @PostMapping("/adminlogin")
     public String login(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -98,6 +97,7 @@ public class MainController {
             return "login";
         }
     }
+
 
 
 
@@ -152,6 +152,7 @@ public class MainController {
 
 
 
+
     private static final int FIRST_TIME_ACCESS_NULL_TO_FIRST_IDX = 0;
 
     @GetMapping("/admin/list-employee")
@@ -176,6 +177,7 @@ public class MainController {
         modelAndView.addObject("maxPageNum", employeeEntitiesRsp.getTotalPages());
         return modelAndView;
     }
+
 
 
 
@@ -214,6 +216,8 @@ public class MainController {
 
 
 
+
+
     @PostMapping("/admin/edit-employee/{id}")
     public ModelAndView editNewEmployee(EmployeeInputModel employeeInputModel, @PathVariable("id") Long id){
         int errCase = 0;
@@ -247,7 +251,6 @@ public class MainController {
             errCase = 3;
         }
 
-
         ModelAndView modelAndView = new ModelAndView("addemployee");
         switch (errCase){
             case 1:
@@ -265,6 +268,10 @@ public class MainController {
 
         return modelAndView;
     }
+
+
+
+
 }
 
 

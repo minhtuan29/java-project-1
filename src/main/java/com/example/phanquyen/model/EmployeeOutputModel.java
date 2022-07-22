@@ -13,19 +13,4 @@ public class EmployeeOutputModel {
     String department;
     String imgFileName;
     String skills;
-
-    @Override
-    public String toString() {
-        return "EmployeeOutputModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", phone='" + phone + '\'' +
-                ", hometown='" + hometown + '\'' +
-                ", role='" + role + '\'' +
-                ", department='" + department + '\'' +
-                ", imgFileName='" + imgFileName + '\'' +
-                ", skills='" + skills + '\'' +
-                '}';
-    }
 }
