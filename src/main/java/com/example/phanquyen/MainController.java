@@ -101,7 +101,6 @@ public class MainController {
 
 
 
-
     @PostMapping("/admin/add-employee")
     public ModelAndView addNewEmployee(EmployeeInputModel employeeInputModel){
         Employee employee = employeeConverter.convertToEntity(employeeInputModel);
@@ -153,7 +152,6 @@ public class MainController {
 
 
 
-
     private static final int FIRST_TIME_ACCESS_NULL_TO_FIRST_IDX = 0;
 
     @GetMapping("/admin/list-employee")
@@ -182,7 +180,6 @@ public class MainController {
 
 
 
-
     @GetMapping("/admin/delete-employee/{id}")
     public String deleteEmployee(@PathVariable("id") Long id, HttpServletResponse response, RedirectAttributes redirectAttrs){
         var em = employeeRepo.getReferenceById(id);
@@ -201,14 +198,71 @@ public class MainController {
 
 
 
-
-
-    @GetMapping("/admin/edit-employee")
-    public ModelAndView editEmployee(){
+    @GetMapping("/admin/edit-employee/{id}")
+    public ModelAndView editEmployee(@PathVariable("id") Long id){
         ModelAndView modelAndView = new ModelAndView("editemployee");
-        Employee employee = employeeRepo.getReferenceById(26L);
-        EmployeeOutputModel employeeOutputModel = employeeConverter.convertToEmployeeOuputModel(employee);
-        modelAndView.addObject("employee", employeeOutputModel);
+
+        Employee employee = employeeRepo.getReferenceById(id);
+
+        if(employee != null){
+            modelAndView.addObject("employee", employeeConverter.convertToEmployeeOuputModel(employee));
+        }else{
+            modelAndView.addObject("deletedEmpErrMsg", "Xin lỗi, có vẻ nhân viên này đã bị xóa rồi");
+        }
+        return modelAndView;
+    }
+
+
+
+    @PostMapping("/admin/edit-employee/{id}")
+    public ModelAndView editNewEmployee(EmployeeInputModel employeeInputModel, @PathVariable("id") Long id){
+        int errCase = 0;
+        boolean toUseNewImg = false;
+
+        Employee employeeDatabase = employeeRepo.getReferenceById(id);
+        if( employeeDatabase != null) { // nếu còn tồn tại trong DB mới thực hiện
+            Employee employeeToSave = employeeConverter.convertToEntity(employeeInputModel);
+            employeeToSave.setId(id);
+
+            if(employeeToSave.getImgFileName() == null) { // nếu dùng lại ảnh cũ
+                employeeToSave.setImgFileName(employeeDatabase.getImgFileName()); // thì liên kết với ảnh cũ
+            }else{
+                toUseNewImg = true; // ngược lại thì dùng ảnh mới
+            }
+
+            try {
+                employeeRepo.save(employeeToSave);
+                // nếu lưu thành công bên DB, tiếp tục tiến hành lưu ảnh
+                if( toUseNewImg){ // Lưu ảnh : nếu dùng ảnh mới thì mới lưu ảnh
+                    try {
+                        FileUltis.saveFile(employeeInputModel.getImgFile(), "photos", employeeToSave.getImgFileName());
+                    }catch (Exception e){
+                        errCase = 1; // lưu thành công nhưng lưu ảnh thất bại
+                    }
+                }
+            }catch (Exception e){
+                errCase = 2; // hệ thống gặp sự cố, vui lòng tới dịp sau
+            }
+        }else { // không tồn tại trong DB, không thực hiện gì hết
+            errCase = 3;
+        }
+
+
+        ModelAndView modelAndView = new ModelAndView("addemployee");
+        switch (errCase){
+            case 1:
+                modelAndView.addObject("msg", "Đã lưu nhân viên, nhưng quá trình lưu ảnh thất bại do hệ thống gặp sự cố. Hãy cập nhật ảnh khi hệ thống khôi phục");
+                break;
+            case 2:
+                modelAndView.addObject("msg", "failed");
+                break;
+            case 3:
+                modelAndView.addObject("msg", "Không tồn tại nhân viên này trong hệ thống nữa, có lẽ quản trị viên khác đã xóa");
+                break;
+            default:
+                modelAndView.addObject("msg", "successfully");
+        }
+
         return modelAndView;
     }
 }

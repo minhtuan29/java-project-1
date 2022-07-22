@@ -30,6 +30,7 @@
                 return false;
             }
             // ...
+
             return true;
         }
     </script>
@@ -208,8 +209,9 @@
             top: 35%;
             visibility: visible;
         }
+
         body{
-            background: url("../photos/anh-nen.jpeg") no-repeat;
+            background: url("/photos/anh-nen.jpeg") no-repeat;
             background-size: cover;
         }
 
@@ -257,7 +259,8 @@
 
         <div class="inputtext" id="hometown">
             <label>Quê Quán</label>
-            <input type="number" id="input-hometown-id" name="hometownID" style="display: none">
+            <input type="number" id="input-hometown-id" name="hometownID" style="display: none"
+                   th:value="${#servletContext.getAttribute('hometownMapStrInt')[employee.hometown]}">
             <div>
                 <input type="text" id="input-hometown-txt" style="width: 9em" required th:value="${employee.hometown}">
             </div>
@@ -327,16 +330,24 @@
         setTimeout(closePopup, delaySecond*1000);
     }
 
-    let msg = [[${msg}]];
-    if(msg !== null && msg !== ""){
-        if(msg === "successfully"){
-            openPopupThenClose(1, '<img src="/photos/success-icon.png" width="150px" height="150px">', null);
-        }else if ( msg === "failed"){
-            openPopupThenClose(3,'<img src="/photos/server-fixing.jpg" width="120px" height="120px">' ,"hệ thống đang lỗi, vui lòng quay lại dịp sau")
+    let deletedEmpErrMsg = [[${deletedEmpErrMsg}]]; // xin lỗi có lẽ nhân viên này bị xóa rồi, không tiến hành chỉnh sửa được
+    if(deletedEmpErrMsg !== null && deletedEmpErrMsg !== ""){
+        openPopupThenClose(3, '<img src="/photos/deleted-employee-icon.png" width="100px" height="100px">', deletedEmpErrMsg);
+        location = "/admin/list-employee";
+    }
+
+    let msgEdit = [[${msg}]];
+    if( msgEdit !== null && msgEdit !== ""){
+        if(msgEdit === "successfully"){
+            openPopupThenClose(1, '<img src="/photos/success-icon.png" width="120px", height="120px">', null);
+        }else if( msgEdit === "failed"){
+            openPopupThenClose(3, '<img src="/photos/server-fixing.jpg" width="100px", height="100px">', "hệ thống đang lỗi, vui lòng quay lại sau");
         }else{
-            openPopupThenClose(4,'<img src="/photos/error-saving-img.png" width="110px" height="100px">',msg);
+            openPopupThenClose(3, '<img src="/photos/error-icon.png" width="100px", height="100px">', msgEdit);
         }
     }
+
+
 
     document.getElementById("imgInputButton").onchange = evt => {
         const [file] = imgInputButton.files;

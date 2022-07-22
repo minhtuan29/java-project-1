@@ -216,7 +216,7 @@
             <td>[[${e.skills}]]</td>
             <td style="padding-left: 2em; padding-right: 2em">
                 <img src="/photos/delete-icon.jpg" width="28em" height="28em" th:onclick="|newGetRequestDelete('${e.id}')|">
-                <img src="/photos/edit-icon2.png" width="35em" height="30em">
+                <img src="/photos/edit-icon2.png" width="35em" height="30em" th:onclick="|location = '/admin/edit-employee/${e.id}'|">
             </td>
         </tr>
         </tbody>
