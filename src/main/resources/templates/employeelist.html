@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet"/>
+    <title>employee list</title>
+
+
+
+                        <style>
+                            body{
+                                background: url("../photos/anh-nen.jpeg") no-repeat;
+                                background-size: cover;
+                                font-size: 1.7em;
+                            }
+                            table{
+                                border-top: 5px solid gray;
+                                border-left: 20px solid gray;
+                                border-right: 20px solid gray;
+                                border-bottom: 15px solid gray;
+                                background-color: white;
+                                border-collapse: collapse;
+                                margin: auto;
+                                margin-top: 2em;
+                            }
+                            th{
+                                background-color: ghostwhite;
+                                color: darkblue;
+                                height: 60px;
+                                width: 120px;
+                                text-align: center;
+                            }
+                            td{
+                                text-align: center;
+                            }
+                            tr{
+                                border: solid 1px gainsboro;
+                            }
+
+                            tr:nth-child(even) {background-color: aliceblue }
+
+                            #form-search > input{
+                                text-align: center;
+                            }
+                            input::placeholder{
+                                text-align: center;
+                            }
+                            label{
+                                font-weight: lighter;
+                            }
+                            [type="checkbox"]{
+                                vertical-align:middle;
+                            }
+                            ul {
+                                list-style: none;
+                            }
+                            .list-items{
+                                border: solid 1px #dddddd;
+                                background-color: white;
+                                width: 8em;
+                                height: 2em;
+                            }
+                            .list-items:hover {
+                                background-color: paleturquoise;
+                            }
+
+                            select{
+                                height: 1.6em;
+                                text-align: center;
+                            }
+                            input[type="number"]{
+                                width: 4em;
+                            }
+                            input{
+                                height: 1.6em;
+                            }
+                            tbody > tr:hover  {
+                                outline: .8px solid black;
+                            }
+                            table img{
+                                margin-left: 1em;
+                            }
+                            table img:hover{
+                                transform: scale(1.2, 1.2);
+                                transition: .3s ease;
+                            }
+                            #avt:hover{
+                                outline: none;
+                                transform: scale(2.5, 2.5);
+                                transition: .3s ease;
+                            }
+
+                            #dialogYesNo{
+                                position: fixed;
+                                top: 30%;
+                                left: 50%;
+                                transform: translate(-50%,-50%);
+                                width: 25em;
+                                height: 6em;
+                                border: 2px solid dimgray;
+                                border-radius: 1em;
+                                box-shadow: 0 5px 10px rgba(0, 0, 0, .30);
+                                background: #fff;
+                                visibility: hidden;
+                                text-align: center;
+                                padding-top: 1em;
+                                transition: .2s linear;
+                            }
+                            #dialogYesNo.show{
+                                visibility: visible;
+                                top: 31%;
+                                transition: .5s ease;
+                            }
+
+                            #popup{
+                                position: fixed;
+                                z-index: 1;
+                                top: 30%;
+                                left: 50%;
+                                transform: translate(-50%,-50%);
+                                width: 300px;
+                                height: 200px;
+                                border: 2px solid dimgray;
+                                border-radius: 1em;
+                                box-shadow: 0 5px 10px rgba(0, 0, 0, .30);
+                                background: #fff;
+                                visibility: hidden;
+                                text-align: center;
+                                padding-top: 2em;
+                            }
+                            #popup.show{
+                                top: 35%;
+                                visibility: visible;
+                                transition: 0.3s;
+                            }
+
+                        </style>
+
+
+</head>
+<body>
+
+                            <div id="dialogYesNo">
+                                <p id="contentDialog"></p>
+                                <button onclick="prototypeFunc()">Xác nhận</button>
+                                <button onclick="closeDialogYesNo()">Hủy bỏ</button>
+                            </div>
+
+
+                            <div id="popup" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.2em">
+                            </div>
+
+    <table>
+        <thead>
+            <form>
+                <td> <img src="/photos/search-icon.png" height="35em" width="36em" ></td>
+
+                <td><input type="text" style="text-align: center" name="name"></td>
+
+                <td style="display: flex; flex-direction: column; align-items: center; margin-top: 1.5em">
+                    <input type="number" placeholder="min" name="ageMin">
+                    <input type="number" placeholder="max" name="ageMax">
+                </td>
+
+                <td> <input type="text" name="phone" style="width: 9em; margin: 1em"></td>
+
+                <td style="position: relative">
+                    <input type="number" id="input-hometown-id" name="hometownID" style="display: none">
+                    <div>
+                        <input type="text" id="input-hometown-txt" style="width: 8em; margin-left: .5em; margin-right: .5em" >
+                    </div>
+                    <ul class="list" style="position: absolute" ></ul>
+                </td>
+
+
+                <td>
+                    <select class="select-class" name="roleID" style="margin-left: .5em; margin-right: .5em" >
+                        <option selected>-- --</option>
+                        <option th:each="role:${#servletContext.getAttribute('roles')}" th:value="${role.id}"> [[${role.name}]]</option>
+                    </select>
+                </td>
+
+                <td>
+                    <select class="select-class" name="departmentID" style="width: 9em">
+                        <option selected>-- --</option>
+                        <option th:each="department:${#servletContext.getAttribute('departments')}" th:value="${department.id}"> Phòng [[${department.name}]]</option>
+                    </select>
+                </td>
+
+                <td style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 1em; justify-content: center;">
+                    <label><input type="checkbox" name="skills" value="english">Tiếng Anh giao tiếp</label>
+                    <label><input type="checkbox" name="skills" value="office">Tin học văn phòng</label>
+                    <label><input type="checkbox" name="skills" value="present">Thuyết trình</label>
+                </td>
+
+                <td style="background-color: white">
+                    <img src="/photos/add-icon5.png" width="80em" height="64em" onclick="location = '/admin/add-employee'">
+                </td>
+
+            </form>
+        </thead>
+
+        <thead>
+        <th>Ảnh</th>  <th>Tên</th> <th>Tuổi</th> <th>Số điện thoại</th>  <th>Quê quán</th>  <th>Chức Vụ</th>  <th>Phòng Ban</th>  <th style="width: 12em">Kỹ Năng</th>    <th style="width: auto">  </th>
+        </thead>
+
+        <tbody>
+        <tr th:each="e : ${employees}">
+            <td><image id="avt" style="height: 60px; width: 70px; padding: 5px;" th:src="@{${'/photos/' + e.imgFileName}}"></td>
+            <td>[[${e.name}]]</td>
+            <td>[[${e.age}]]</td>
+            <td>[[${e.phone}]]</td>
+            <td>[[${e.hometown}]]</td>
+            <td>[[${e.role}]]</td>
+            <td>Phòng [[${e.department}]]</td>
+            <td>[[${e.skills}]]</td>
+            <td style="padding-left: 2em; padding-right: 2em">
+                <img src="/photos/delete-icon.jpg" width="28em" height="28em" th:onclick="|newGetRequestDelete('${e.id}')|">
+                <img src="/photos/edit-icon2.png" width="35em" height="30em">
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+
+
+
+    <div class="form-group col-md-11 pagination-container" style="margin-left: 42%">
+        <ul class="pagination">
+
+            <li th:class="${pageNum == 1} ? disabled">
+                <a class="pageLink" th:href="@{/admin/list-employee(page=1)}">&laquo;</a>
+            </li>
+            <li th:class="${pageNum == 1} ? disabled">
+                <a class="pageLink" th:href="@{/admin/list-employee(page=${pageNum}-1)}">&larr;</a>
+            </li>
+
+            <li th:class="${pageNum == page } ? 'active pointer-disabled'"
+                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                <a class="pageLink" th:if="${page} > 0" th:href="@{/admin/list-employee(page=${page})}" th:text="${page}"></a>
+            </li>
+
+            <li th:class="${pageNum == maxPageNum} ? disabled">
+                <a class="pageLink"
+                   th:href="@{/admin/list-employee( page=${pageNum + 1})}">&rarr;</a>
+            </li>
+            <li th:class="${pageNum == maxPageNum} ? disabled">
+                <a class="pageLink"
+                   th:href="@{/admin/list-employee(page=${maxPageNum})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+
+
+    <script th:inline="javascript">
+
+        let hometownMapStrInt = [[${#servletContext.getAttribute("hometownMapStrInt")}]];
+        let hometownMapStrIntJs = new Map(Object.entries(hometownMapStrInt));
+        let hometownValues = [ ...hometownMapStrIntJs.keys() ];
+
+        let input = document.getElementById("input-hometown-txt");
+        let inputID = document.getElementById("input-hometown-id");
+
+        input.addEventListener("keyup", (e) => {
+            removeElements();
+            for (let i of hometownValues) {
+                if ( i.toLowerCase().startsWith(input.value.toLowerCase()) && input.value != "") {
+                    let listItem = document.createElement("li");
+                    listItem.classList.add("list-items");
+                    listItem.style.cursor = "pointer";
+                    listItem.setAttribute("onclick", "displayNamesAndMap('" + i + "')");
+                    let word = i.substr(0, input.value.length);
+                    word += i.substr(input.value.length);
+                    listItem.innerHTML = word;
+                    document.querySelector(".list").appendChild(listItem);
+                }
+            }
+        });
+
+        function displayNamesAndMap(value) {
+            input.value = value;
+            inputID.value = hometownMapStrIntJs.get(value);
+            removeElements();
+        }
+
+        function removeElements() {
+            let items = document.querySelectorAll(".list-items");
+            items.forEach((item) => {
+                item.remove();
+            });
+        }
+
+        let prototypeFunc = () => {};
+        let dialogYesNo = document.getElementById('dialogYesNo');
+        function closeDialogYesNo(){
+            dialogYesNo.classList.remove("show");
+        }
+        function openDialogYesNo() {
+            dialogYesNo.classList.add("show");
+        }
+
+        function openDialogNewRequest(questionMsg, url){
+            document.getElementById("contentDialog").innerText = questionMsg;
+            openDialogYesNo();
+            prototypeFunc = () =>{
+                location = url;
+            }
+        }
+
+        function newGetRequestDelete(id){
+            let url = "/admin/delete-employee/" + id;
+            openDialogNewRequest("Bạn có muốn xóa nhân viên này thật chứ ?", url);
+        }
+
+
+
+
+        let popup = document.getElementById('popup');
+        function closePopup(){
+            popup.classList.remove("show");
+        }
+        function openPopupThenClose(delaySecond, innerHTML, msgInsert) {
+            popup.innerHTML = innerHTML;
+            if(msgInsert !== null){
+                popup.innerHTML += msgInsert;
+            }
+            popup.classList.add('show');
+            setTimeout(closePopup, delaySecond*1000);
+        }
+
+        let msg = [[${msg}]];
+        if(msg !== null && msg !== ""){
+            if(msg === "successfully"){
+                openPopupThenClose(1, '<img src="/photos/success-icon.png" width="120px" height="120px">', null);
+            }else{
+                openPopupThenClose(3,'<img src="/photos/server-fixing.jpg" width="120px" height="120px">' ,"hệ thống đang lỗi, vui lòng thực hiện lại dịp sau");
+            }
+        }
+
+    </script>
+
+</body>
+</html>

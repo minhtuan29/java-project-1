@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Employee FE</title>
+
+
+    <script>
+
+        function checkValidInputs(){
+            let age = document.form.age.value;
+            let employeeName = document.form.name.value;
+
+            if(age > 60){
+                openPopupThenClose(2, '<img src="/photos/error-icon.png" width="100px" height="100px">', "Tuổi lớn quá để đi làm. Nhân viên này nên nghỉ hưu");
+                return false;
+            }
+
+            let firstNameLastName = employeeName.split(" ");
+            if(firstNameLastName.length === 1){
+                openPopupThenClose(2, '<img src="/photos/error-icon.png" width="100px" height="100px">', 'Tên thì phải có họ và tên. Có vẻ bạn nhập thiếu. Xin hãy nhập lại');
+                return false;
+            }
+            if(firstNameLastName.some(e => e.length === 1)){
+                openPopupThenClose(2, '<img src="/photos/error-icon.png" width="100px" height="100px">', 'Họ, tên có vẻ nhập sai. Tên quá ngắn . Xin hãy nhập lại');
+                return false;
+            }
+            // ...
+            return true;
+        }
+    </script>
+
+
+
+    <style>
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            /*align-items: center;*/
+            font-family: monospace;
+        }
+
+        form {
+            margin-top: 6em;
+            border: 2px solid grey;
+            height: 68%;
+            width: 30%;
+            border-radius: 20px;
+            padding: 1rem;
+            position: relative;
+            background-color: white;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .khung1 {
+            justify-content: flex-start;
+            padding-left: 14%;
+            gap: 9% 10%;
+        }
+
+        #name {
+            width: 20em;
+        }
+
+        #age {
+            width: 5em;
+        }
+
+        #phone {
+            width: 12em;
+        }
+
+        #hometown {
+            width: 10rem;
+        }
+
+        .khungselect {
+            margin-top: 2em;
+            justify-content: center;
+            gap: 9% 15%;
+        }
+
+        .inputtext {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            width: 15em;
+        }
+
+        input {
+            width: 100%;
+            padding-top: 0.3em;
+            padding-bottom: 0.2em;
+            transition: 0.2s ease;
+            font-size: 1.2em;
+            border: 1.8px solid;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        input:hover {
+            border-color: skyblue;
+        }
+
+        input:focus {
+            outline-color: dodgerblue;
+        }
+
+        .inputtext > label {
+            position: relative;
+            top: 15%;
+            left: 10%;
+            background-color: white;
+            color: dimgrey;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 1.1em;
+            width: max-content;
+            padding-left: 4%;
+            padding-right: 4%;
+        }
+
+        #skills-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 0 1em;
+            margin-top: 2em;
+            margin-left: 10%;
+            font-size: 1.4em;
+        }
+
+        .select-class {
+            font-size: 1em;
+            padding: .3em 0.6em;
+            border-radius: 10px;
+            border: 2px solid dimgray;
+            width: max-content;
+            text-align: center;
+        }
+
+        .select-class:hover {
+            border: 2px solid lightskyblue;
+        }
+
+        #imgInputButton {
+            display: none;
+        }
+
+        #img {
+            height: 19em;
+            width: fit-content;
+        }
+
+        .khung-img {
+            font-size: 1em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 20em;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 5%;
+            border: solid 2px gray;
+            border-radius: 20px;
+        }
+
+        ul {
+            list-style: none;
+        }
+        .list-items{
+            border: solid 1px #dddddd;
+            background-color: white;
+            width: 8em;
+            height: 2em;
+        }
+        .list-items:hover {
+            background-color: paleturquoise;
+        }
+
+
+        #popup{
+            position: fixed;
+            z-index: 1;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 300px;
+            height: 200px;
+            border: 2px solid dimgray;
+            border-radius: 1em;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .30);
+            background: #fff;
+            visibility: hidden;
+            transition: 0.3s;
+            text-align: center;
+        }
+        #popup.show{
+            top: 35%;
+            visibility: visible;
+        }
+        body{
+            background: url("../photos/anh-nen.jpeg") no-repeat;
+            background-size: cover;
+        }
+
+        input[type=submit]:hover{
+            color: cornflowerblue;
+            font-weight: bold;
+            outline: none;
+            border-color: black;
+        }
+    </style>
+
+</head>
+
+
+
+
+
+<body>
+
+
+
+<div id="popup" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.2em">
+</div>
+
+
+<form name="form" onSubmit="return checkValidInputs()" method="post" enctype="multipart/form-data">
+
+    <div class="container khung1">
+        <div class="inputtext" id="name">
+            <label>Tên</label>
+            <input type="text" required name="name" th:value="${employee.name}">
+        </div>
+
+        <div class="inputtext" id="age">
+            <label>Tuổi</label>
+            <input type="number" required name="age" th:value="${employee.age}">
+        </div>
+    </div>
+
+    <div class="container khung1">
+        <div class="inputtext" id="phone">
+            <label>Số Điện Thoại</label>
+            <input type="number" required name="phone" th:value="${employee.phone}">
+        </div>
+
+        <div class="inputtext" id="hometown">
+            <label>Quê Quán</label>
+            <input type="number" id="input-hometown-id" name="hometownID" style="display: none">
+            <div>
+                <input type="text" id="input-hometown-txt" style="width: 9em" required th:value="${employee.hometown}">
+            </div>
+            <div style="position: relative; top: -1em">
+                <ul class="list" style="position: absolute" ></ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="skills-container">
+        <b style="margin-right: 1em;"> Kỹ năng :</b>
+        <label>Tiếng Anh<br>giao tiếp<input type="checkbox" name="skills" value="english" th:checked="${#strings.contains(employee.skills, 'english')}"></label>
+        <label>Tin học<br>văn phòng<input type="checkbox" name="skills" value="office" th:checked="${#strings.contains(employee.skills, 'office')}"></label>
+        <label>Thuyết<br>trình<input type="checkbox" name="skills" value="present" th:checked="${#strings.contains(employee.skills, 'present')}"></label>
+    </div>
+
+    <div class="container khungselect">
+        <select class="select-class" name="roleID" required>
+
+            <option th:each="role:${#servletContext.getAttribute('roles')}"
+                    th:selected="${employee.role == role.name}"
+                    th:value="${role.id}">
+                [[${role.name}]]
+            </option>
+        </select>
+
+        <select class="select-class" name="departmentID" required>
+            <option th:each="department:${#servletContext.getAttribute('departments')}"
+                    th:selected="${employee.department == department.name}"
+                    th:value="${department.id}">
+                Phòng [[${employee.department}]]
+            </option>
+        </select>
+    </div>
+
+
+    <div class="container khung-img">
+        <input accept="image/*" type='file' id="imgInputButton" name="imgFile"/>
+        <label for="imgInputButton">
+            <img id="img" th:src="@{${'/photos/' + employee.imgFileName}}"/>
+        </label>
+    </div>
+
+    <input type="submit" value="Cập Nhật"
+           style="width: max-content; position: absolute; bottom: 2em; left: 42%; padding-right: .6em; font-size: 1em">
+
+</form>
+
+
+
+<script th:inline="javascript">
+    const FILE_SIZE_MAX_MB =  [[${#servletContext.getAttribute("filemaxsizeMB")}]];
+
+    let popup = document.getElementById('popup');
+
+    function closePopup(){
+        popup.classList.remove("show");
+    }
+
+    function openPopupThenClose(delaySecond, innerHTML, msgInsert) {
+        popup.innerHTML = innerHTML;
+        if(msgInsert !== null){
+            popup.innerHTML += msgInsert;
+        }
+        popup.classList.add('show');
+        setTimeout(closePopup, delaySecond*1000);
+    }
+
+    let msg = [[${msg}]];
+    if(msg !== null && msg !== ""){
+        if(msg === "successfully"){
+            openPopupThenClose(1, '<img src="/photos/success-icon.png" width="150px" height="150px">', null);
+        }else if ( msg === "failed"){
+            openPopupThenClose(3,'<img src="/photos/server-fixing.jpg" width="120px" height="120px">' ,"hệ thống đang lỗi, vui lòng quay lại dịp sau")
+        }else{
+            openPopupThenClose(4,'<img src="/photos/error-saving-img.png" width="110px" height="100px">',msg);
+        }
+    }
+
+    document.getElementById("imgInputButton").onchange = evt => {
+        const [file] = imgInputButton.files;
+        if (file) {
+            if(file.size >= FILE_SIZE_MAX_MB * 1024 * 1024){
+                openPopupThenClose(2,  '<img src="/photos/error-icon.png" width="100px" height="100px">',`Avatar không vượt quá ${FILE_SIZE_MAX_MB}MB , hãy up file nhỏ hơn`);
+                imgInputButton.files = null;
+                img.src = "../photos/may-anh.png";
+                img.style.height = "4em";
+                img.style.width = "4em";
+                return;
+            }
+            img.src = URL.createObjectURL(file);
+            img.style.height = "19em";
+            img.style.width = "fit-content";
+        }
+    }
+
+
+    let hometownMapStrInt = [[${#servletContext.getAttribute("hometownMapStrInt")}]];
+    let hometownMapStrIntJs = new Map(Object.entries(hometownMapStrInt));
+    let hometownValues = [ ...hometownMapStrIntJs.keys() ];
+
+    let input = document.getElementById("input-hometown-txt");
+    let inputID = document.getElementById("input-hometown-id");
+
+    input.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let i of hometownValues) {
+            if ( i.toLowerCase().startsWith(input.value.toLowerCase()) && input.value != "") {
+                let listItem = document.createElement("li");
+                listItem.classList.add("list-items");
+                listItem.style.cursor = "pointer";
+                listItem.setAttribute("onclick", "displayNamesAndMap('" + i + "')");
+                let word = i.substr(0, input.value.length);
+                word += i.substr(input.value.length);
+                listItem.innerHTML = word;
+                document.querySelector(".list").appendChild(listItem);
+            }
+        }
+    });
+
+    function displayNamesAndMap(value) {
+        input.value = value;
+        inputID.value = hometownMapStrIntJs.get(value);
+        removeElements();
+    }
+
+    function removeElements() {
+        let items = document.querySelectorAll(".list-items");
+        items.forEach((item) => {
+            item.remove();
+        });
+    }
+
+
+    function checkContains(strArr, str){
+        return strArr.inclues(str);
+    }
+
+</script>
+
+</body>
+</html>
