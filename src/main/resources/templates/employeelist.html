@@ -262,6 +262,8 @@
 
     <script th:inline="javascript">
 
+
+
         let hometownMapStrInt = [[${#servletContext.getAttribute("hometownMapStrInt")}]];
         let hometownMapStrIntJs = new Map(Object.entries(hometownMapStrInt));
         let hometownValues = [ ...hometownMapStrIntJs.keys() ];
@@ -336,7 +338,10 @@
             setTimeout(closePopup, delaySecond*1000);
         }
 
+
         let msg = [[${msg}]];
+
+
         if(msg !== null && msg !== ""){
             if(msg === "successfully"){
                 openPopupThenClose(1, '<img src="/photos/success-icon.png" width="120px" height="120px">', null);
@@ -344,6 +349,13 @@
                 openPopupThenClose(3,'<img src="/photos/server-fixing.jpg" width="120px" height="120px">' ,"hệ thống đang lỗi, vui lòng thực hiện lại dịp sau");
             }
         }
+
+
+        let deletedEmpErrMsg = [[${deletedEmpErrMsg}]]; // xin lỗi có lẽ nhân viên này bị xóa rồi, không tiến hành chỉnh sửa được
+        if(deletedEmpErrMsg !== null && deletedEmpErrMsg !== ""){
+            openPopupThenClose(3, '<img src="/photos/deleted-employee-icon.png" width="100px" height="100px">', deletedEmpErrMsg);
+        }
+
 
     </script>
 

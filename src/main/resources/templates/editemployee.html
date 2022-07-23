@@ -11,6 +11,7 @@
 
     <script>
 
+
         function checkValidInputs(){
             let age = document.form.age.value;
             let employeeName = document.form.name.value;
@@ -330,11 +331,7 @@
         setTimeout(closePopup, delaySecond*1000);
     }
 
-    let deletedEmpErrMsg = [[${deletedEmpErrMsg}]]; // xin lỗi có lẽ nhân viên này bị xóa rồi, không tiến hành chỉnh sửa được
-    if(deletedEmpErrMsg !== null && deletedEmpErrMsg !== ""){
-        openPopupThenClose(3, '<img src="/photos/deleted-employee-icon.png" width="100px" height="100px">', deletedEmpErrMsg);
-        location = "/admin/list-employee";
-    }
+
 
     let msgEdit = [[${msg}]];
     if( msgEdit !== null && msgEdit !== ""){

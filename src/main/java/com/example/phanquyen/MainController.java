@@ -5,6 +5,7 @@ import com.example.phanquyen.model.EmployeeInputModel;
 import com.example.phanquyen.model.EmployeeOutputModel;
 import com.example.phanquyen.repository.DatabaseLoad;
 import com.example.phanquyen.repository.entity.Employee;
+import com.example.phanquyen.repository.hibernate.Hibernate;
 import com.example.phanquyen.repository.jparepo.EmployeeRepo;
 import com.example.phanquyen.service.EmployeeService;
 import com.example.phanquyen.service.SelectPageMenu;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +48,9 @@ public class MainController {
 
     @Autowired
     EmployeeService employeeService;
+
+    @Autowired
+    Hibernate hibernate;
 
 
     @Value("${spring.servlet.multipart.max-file-size}") String fileMaxSizeMBxx;
@@ -184,7 +189,7 @@ public class MainController {
 
     @GetMapping("/admin/delete-employee/{id}")
     public String deleteEmployee(@PathVariable("id") Long id, HttpServletResponse response, RedirectAttributes redirectAttrs){
-        var em = employeeRepo.getReferenceById(id);
+        var em = hibernate.getByID(Employee.class, id);
         if(em != null){
             try{
                 employeeRepo.delete(em);
@@ -201,17 +206,15 @@ public class MainController {
 
 
     @GetMapping("/admin/edit-employee/{id}")
-    public ModelAndView editEmployee(@PathVariable("id") Long id){
-        ModelAndView modelAndView = new ModelAndView("editemployee");
-
-        Employee employee = employeeRepo.getReferenceById(id);
-
+    public String editEmployee(@PathVariable("id") Long id, RedirectAttributes redirectAttrs, Model model){
+        Employee employee = hibernate.getByID(Employee.class, id);
         if(employee != null){
-            modelAndView.addObject("employee", employeeConverter.convertToEmployeeOuputModel(employee));
+            model.addAttribute("employee", employeeConverter.convertToEmployeeOuputModel(employee));
+            return "editemployee";
         }else{
-            modelAndView.addObject("deletedEmpErrMsg", "Xin lỗi, có vẻ nhân viên này đã bị xóa rồi");
+            redirectAttrs.addFlashAttribute("deletedEmpErrMsg", "Xin lỗi, có vẻ nhân viên đó đã quản trí viên khóa xóa rồi");
+            return "redirect:/admin/list-employee";
         }
-        return modelAndView;
     }
 
 
@@ -223,7 +226,7 @@ public class MainController {
         int errCase = 0;
         boolean toUseNewImg = false;
 
-        Employee employeeDatabase = employeeRepo.getReferenceById(id);
+        Employee employeeDatabase = hibernate.getByID(Employee.class, id);
         if( employeeDatabase != null) { // nếu còn tồn tại trong DB mới thực hiện
             Employee employeeToSave = employeeConverter.convertToEntity(employeeInputModel);
             employeeToSave.setId(id);
