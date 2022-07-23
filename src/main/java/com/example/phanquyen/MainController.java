@@ -189,10 +189,9 @@ public class MainController {
 
     @GetMapping("/admin/delete-employee/{id}")
     public String deleteEmployee(@PathVariable("id") Long id, HttpServletResponse response, RedirectAttributes redirectAttrs){
-        var em = hibernate.getByID(Employee.class, id);
-        if(em != null){
+        if(employeeRepo.existsById(id)){
             try{
-                employeeRepo.delete(em);
+                employeeRepo.deleteById(id);
                 redirectAttrs.addFlashAttribute("msg", "successfully"); // khi redir thì không dùng được Model để truyền dữ liệu, phải dùng cái này
             }catch (Exception e){
                 redirectAttrs.addFlashAttribute("msg", "failed");
@@ -204,12 +203,10 @@ public class MainController {
 
 
 
-
     @GetMapping("/admin/edit-employee/{id}")
     public String editEmployee(@PathVariable("id") Long id, RedirectAttributes redirectAttrs, Model model){
-        Employee employee = hibernate.getByID(Employee.class, id);
-        if(employee != null){
-            model.addAttribute("employee", employeeConverter.convertToEmployeeOuputModel(employee));
+        if(employeeRepo.existsById(id)){
+            model.addAttribute("employee", employeeConverter.convertToEmployeeOuputModel(employeeRepo.getReferenceById(id)));
             return "editemployee";
         }else{
             redirectAttrs.addFlashAttribute("deletedEmpErrMsg", "Xin lỗi, có vẻ nhân viên đó đã quản trí viên khóa xóa rồi");
@@ -226,12 +223,11 @@ public class MainController {
         int errCase = 0;
         boolean toUseNewImg = false;
 
-        Employee employeeDatabase = hibernate.getByID(Employee.class, id);
-        if( employeeDatabase != null) { // nếu còn tồn tại trong DB mới thực hiện
+        if( employeeRepo.existsById(id)) { // nếu còn tồn tại trong DB mới thực hiện
             Employee employeeToSave = employeeConverter.convertToEntity(employeeInputModel);
             employeeToSave.setId(id);
-
             if(employeeToSave.getImgFileName() == null) { // nếu dùng lại ảnh cũ
+                Employee employeeDatabase = employeeRepo.getReferenceById(id);
                 employeeToSave.setImgFileName(employeeDatabase.getImgFileName()); // thì liên kết với ảnh cũ
             }else{
                 toUseNewImg = true; // ngược lại thì dùng ảnh mới
