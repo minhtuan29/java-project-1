@@ -333,16 +333,6 @@
 
 
 
-    let msgEdit = [[${msg}]];
-    if( msgEdit !== null && msgEdit !== ""){
-        if(msgEdit === "successfully"){
-            openPopupThenClose(1, '<img src="/photos/success-icon.png" width="120px", height="120px">', null);
-        }else if( msgEdit === "failed"){
-            openPopupThenClose(3, '<img src="/photos/server-fixing.jpg" width="100px", height="100px">', "hệ thống đang lỗi, vui lòng quay lại sau");
-        }else{
-            openPopupThenClose(3, '<img src="/photos/error-icon.png" width="100px", height="100px">', msgEdit);
-        }
-    }
 
 
 

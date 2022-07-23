@@ -222,7 +222,7 @@ public class MainController {
 
 
     @PostMapping("/admin/edit-employee/{id}")
-    public ModelAndView editNewEmployee(EmployeeInputModel employeeInputModel, @PathVariable("id") Long id){
+    public String editNewEmployee(EmployeeInputModel employeeInputModel, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         int errCase = 0;
         boolean toUseNewImg = false;
 
@@ -257,19 +257,19 @@ public class MainController {
         ModelAndView modelAndView = new ModelAndView("addemployee");
         switch (errCase){
             case 1:
-                modelAndView.addObject("msg", "Đã lưu nhân viên, nhưng quá trình lưu ảnh thất bại do hệ thống gặp sự cố. Hãy cập nhật ảnh khi hệ thống khôi phục");
+                redirectAttributes.addFlashAttribute("msgEdit", "Đã lưu nhân viên, nhưng quá trình lưu ảnh thất bại do hệ thống gặp sự cố. Hãy cập nhật ảnh khi hệ thống khôi phục");
                 break;
             case 2:
-                modelAndView.addObject("msg", "failed");
+                redirectAttributes.addFlashAttribute("msgEdit", "failed");
                 break;
             case 3:
-                modelAndView.addObject("msg", "Không tồn tại nhân viên này trong hệ thống nữa, có lẽ quản trị viên khác đã xóa");
+                redirectAttributes.addFlashAttribute("msgEdit", "Không tồn tại nhân viên đó, có lẽ quản trị viên khác đã xóa");
                 break;
             default:
-                modelAndView.addObject("msg", "successfully");
+                redirectAttributes.addFlashAttribute("msgEdit", "successfully");
         }
 
-        return modelAndView;
+        return "redirect:/admin/list-employee";
     }
 
 
