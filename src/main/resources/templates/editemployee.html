@@ -293,7 +293,7 @@
             <option th:each="department:${#servletContext.getAttribute('departments')}"
                     th:selected="${employee.department == department.name}"
                     th:value="${department.id}">
-                Phòng [[${employee.department}]]
+                Phòng [[${department.name}]]
             </option>
         </select>
     </div>
