@@ -35,7 +35,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(sqlInjectionInterceptor)
                 .addPathPatterns("/**");
 
-
+//
 //        registry.addInterceptor(adminInterceptor)
 //                .addPathPatterns("/admin/**")
 //                .excludePathPatterns("admin/logout");

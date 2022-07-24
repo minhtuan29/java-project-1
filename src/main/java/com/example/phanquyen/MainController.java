@@ -2,10 +2,10 @@ package com.example.phanquyen;
 
 import com.example.phanquyen.converter.EmployeeConverter;
 import com.example.phanquyen.model.EmployeeInputModel;
-import com.example.phanquyen.model.EmployeeOutputModel;
+import com.example.phanquyen.model.EmployeeSearchInputModel;
 import com.example.phanquyen.repository.DatabaseLoad;
 import com.example.phanquyen.repository.entity.Employee;
-import com.example.phanquyen.repository.hibernate.Hibernate;
+import com.example.phanquyen.repository.jparepo.CustomizedEmployeeRepo;
 import com.example.phanquyen.repository.jparepo.EmployeeRepo;
 import com.example.phanquyen.service.EmployeeService;
 import com.example.phanquyen.service.SelectPageMenu;
@@ -50,10 +50,11 @@ public class MainController {
     EmployeeService employeeService;
 
     @Autowired
-    Hibernate hibernate;
+    CustomizedEmployeeRepo customizedEmployeeRepo;
 
 
     @Value("${spring.servlet.multipart.max-file-size}") String fileMaxSizeMBxx;
+    @Value("${row.page.count}") Integer ROW_PAGE_COUNT;
 
     @PostConstruct
     private void loadDataToContext(){
@@ -163,7 +164,6 @@ public class MainController {
     @GetMapping("/admin/list-employee")
     public ModelAndView showEmployeePage(
             @RequestParam("page") Optional<Integer> userPageInput
-            , @Value("${row.page.count}") Integer ROW_PAGE_COUNT
     ) {
 
         int databasePageNum = userPageInput.map(x -> x - 1)
@@ -176,10 +176,10 @@ public class MainController {
         var employeeOutputModels = employeeEntitiesRsp.stream().map(employeeConverter::convertToEmployeeOuputModel).toList();
 
         var modelAndView = new ModelAndView("employeelist");
-        modelAndView.addObject("employees", employeeOutputModels);
-        modelAndView.addObject("pager", pagerRsp);
-        modelAndView.addObject("pageNum", pageNumberRsp);
-        modelAndView.addObject("maxPageNum", employeeEntitiesRsp.getTotalPages());
+        modelAndView.addObject("employees", employeeOutputModels); // record
+        modelAndView.addObject("pager", pagerRsp); // first menu and last menu to choose page in menu
+        modelAndView.addObject("pageNum", pageNumberRsp); // cur page user choose in view
+        modelAndView.addObject("maxPageNum", employeeEntitiesRsp.getTotalPages()); //  last page to access
         return modelAndView;
     }
 
@@ -269,7 +269,47 @@ public class MainController {
     }
 
 
+    @GetMapping("search")
+    public String demo(){
+        EmployeeSearchInputModel employeeSearchInputModel = new EmployeeSearchInputModel();
+        employeeSearchInputModel.setMinAge(12);
+        employeeSearchInputModel.setMaxAge(30);
+        String[] skills = new String[2];
+        skills[0] = "english";
+        skills[1] = "present";
+        Integer[] outputNumPages = new Integer[1];
+        employeeSearchInputModel.setSkills(skills);
+        var employeeEntities = customizedEmployeeRepo.findByCondition(employeeSearchInputModel, 10, 1, outputNumPages);
+        for(var e : employeeEntities){
+            System.out.println(e.getName());
+        }
+        return "index";
+    }
 
+
+
+
+    @GetMapping("/admin/list-employee/search")
+    public ModelAndView showEmployeePageSearch(
+            @RequestParam("page") Optional<Integer> userPageInput
+            , EmployeeSearchInputModel employeeSearchInputModel
+    ){
+        int databasePage = userPageInput.map(x -> x - 1).orElse(FIRST_TIME_ACCESS_NULL_TO_FIRST_IDX);
+
+        Integer[] outputNumPages = new Integer[1];
+        var outputEmployeeEntites = customizedEmployeeRepo.findByCondition(employeeSearchInputModel, ROW_PAGE_COUNT, databasePage, outputNumPages);
+
+        int pageNumberRsp = userPageInput.orElse(1); // user begin 1 default, we begin 0
+        var pagerRsp = new SelectPageMenu(outputNumPages[0], pageNumberRsp);
+        var employeeOutputModels = outputEmployeeEntites.stream().map(employeeConverter::convertToEmployeeOuputModel).toList();
+
+        var modelAndView = new ModelAndView("employeelist");
+        modelAndView.addObject("employees", employeeOutputModels); // records
+        modelAndView.addObject("pager", pagerRsp); // first and last page to choose in menu of user view
+        modelAndView.addObject("pageNum", pageNumberRsp); // cur page user choose
+        modelAndView.addObject("maxPageNum", outputNumPages[0]); // last page to access
+        return modelAndView;
+    }
 
 }
 
