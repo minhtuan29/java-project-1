@@ -239,5 +239,12 @@ public class MainController {
 
  ```
  
-## FE Thymeleaf SSRender, Javasript(data convert, input valid check)  
+## Frontend 
+- Java Thymeleaf server side render
+- Javascript(data convert and input valid check) 
+- HTML CSS  
  
+ 
+ 
+About: https://github.com/minhtuan29/java-project-1/tree/master/src/main/resources/templates  
+  
