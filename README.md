@@ -10,6 +10,7 @@ Where I learn
   ![786787](https://user-images.githubusercontent.com/86332370/200097533-09636a98-6a13-4d96-9850-a094965a487a.JPG)  
     
 - Fix bug: [Stackoverflow](https://stackoverflow.com) ,  [Google](https://www.google.com.vn)  
+- Java8 Java11 :  [Google](https://www.google.com.vn) 
 # About 
 ### Repository
 ```java
@@ -249,7 +250,7 @@ public class MainController {
 
  ```
  
-## Frontend 
+## View
 - Java Thymeleaf server side render
 - Javascript(data convert and input valid check) 
 - HTML CSS  
