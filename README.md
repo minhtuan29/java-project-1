@@ -1,4 +1,4 @@
-# The first my personal Java web app (self learn, selft do)
+# My first personal Java web app (self learn, selft do)
   
   
 ### Repository
