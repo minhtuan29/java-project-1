@@ -1,6 +1,14 @@
 # My first personal Java web app (self learn, selft do)
-  
-  
+Where I learn  
+- Learn Java Servlet : https://www.tutorialspoint.com/servlets/index.htm
+- Learn JDBC :  [Google](https://www.google.com.vn)
+- Learn Thymeleaf : https://www.thymeleaf.org/documentation.html
+- Learn Spring EL : https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html
+- Learn Hibernate, HQL, Spring Core, Spring MVC Setup, Spring Boot : [Google](https://www.google.com.vn)
+- Learn Spring Data JPA : https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
+- Practice Instructor :  Chad Darby (Udemy 2020-2021)  
+  ![786787](https://user-images.githubusercontent.com/86332370/200097533-09636a98-6a13-4d96-9850-a094965a487a.JPG)
+
 ### Repository
 ```java
 
@@ -246,5 +254,5 @@ public class MainController {
  
  
  
-About : [Frontend Resources](https://github.com/minhtuan29/java-project-1/tree/master/src/main/resources/templates)  
+About : [Frontend Resources Source Code](https://github.com/minhtuan29/java-project-1/tree/master/src/main/resources/templates)  
   
