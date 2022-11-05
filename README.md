@@ -239,5 +239,5 @@ public class MainController {
 
  ```
  
- ## Frontend : Server Side Thymeleaf Render and Javasript(data convert and input valid check)  
+## Frontend : Thymeleaf SSRender, Javasript(data convert and input valid check)  
  
