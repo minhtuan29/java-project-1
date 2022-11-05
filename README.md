@@ -1,4 +1,4 @@
-# Java Web App using Thymeleaf Server Side Render
+# The first my personal Java web app (self learn, selft do)
   
   
 ### Repository
@@ -239,5 +239,5 @@ public class MainController {
 
  ```
  
-## Frontend : Thymeleaf SSRender, Javasript(data convert and input valid check)  
+## FE Thymeleaf SSRender, Javasript(data convert, input valid check)  
  
