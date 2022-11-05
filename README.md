@@ -246,5 +246,5 @@ public class MainController {
  
  
  
-About: https://github.com/minhtuan29/java-project-1/tree/master/src/main/resources/templates  
+About : [Frontend Resources](https://github.com/minhtuan29/java-project-1/tree/master/src/main/resources/templates)  
   
