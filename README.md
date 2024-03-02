@@ -1,18 +1,9 @@
-# My first personal Java web app (self learn, selft do)
-Where I learn  
-- Learn Java Servlet : https://www.tutorialspoint.com/servlets/index.htm
-- Learn JDBC :  [Google](https://www.google.com.vn)
-- Learn Thymeleaf : https://www.thymeleaf.org/documentation.html
-- Learn Spring EL : https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html
-- Learn Hibernate, HQL, Spring Core, Spring MVC Setup, Spring Boot : [Google](https://www.google.com.vn)
-- Learn Spring Data JPA : https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
-- Practice Concept :  Chad Darby (Udemy 2020-2021)  
-  ![786787](https://user-images.githubusercontent.com/86332370/200097533-09636a98-6a13-4d96-9850-a094965a487a.JPG)  
-    
-- Fix bug: [Stackoverflow](https://stackoverflow.com) ,  [Google](https://www.google.com.vn)  
-- Java8 Java11 :  [Google](https://www.google.com.vn) 
-# About 
-### Repository
+![image](https://github.com/minhtuan29/java-project1-private/assets/86332370/5e28693a-aea1-48f6-b99e-d5949a6bea5d)  
+![image](https://github.com/minhtuan29/java-project1-private/assets/86332370/258d6a2e-bb8a-4aad-b6d2-b208c66e721a)  
+![image](https://github.com/minhtuan29/java-project1-private/assets/86332370/5ebac8ed-af4a-486a-932b-e7d77704bdbe)
+![image](https://github.com/minhtuan29/java-project1-private/assets/86332370/185dd3fb-a78e-4bd0-a2d4-10abc5eef9b3)
+
+ 
 ```java
 
 @Repository
